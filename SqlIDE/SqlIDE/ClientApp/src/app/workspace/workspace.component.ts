@@ -78,8 +78,8 @@ export class WorkspaceComponent implements OnInit {
 
   onRun() {
     const script: Script = {
-      DbType: 'mongodb',
-      DbScript: 'reader',
+      DbType: this.selected,
+      DbScript: this.input,
       ConStr: this.connStr,
       User: null
     };

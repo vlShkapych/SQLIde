@@ -1,7 +1,8 @@
 using System;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using SqlIDE.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore;
+
 using SqlIDE.shared;
 namespace SqlIDE.Controllers
 {
@@ -13,11 +14,21 @@ namespace SqlIDE.Controllers
 
 
         [HttpPost("run")]
-        public void Run([FromBody]Script scr)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public string Run([FromBody]Script scr)
         {
-            Console.WriteLine(scr.ConStr);
-            Console.WriteLine(scr.DbScript);
-            Console.WriteLine(scr.DbType);
+            string res = "";
+            scr.User = new User()
+            {
+                Id = 1,
+                AccType = "moderator",
+                Name = "Vlad"
+            };
+           
+            var db = new DbService(scr);
+            res = db.RunScript();
+            Console.WriteLine(res);
+            return res;
         }
     }
 }
