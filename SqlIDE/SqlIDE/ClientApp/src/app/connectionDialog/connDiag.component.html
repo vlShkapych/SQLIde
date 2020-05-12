@@ -1,0 +1,13 @@
+﻿<h1 mat-dialog-title>Connection Settings</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Input connection string</mat-label>
+    <label>
+      <input matInput [(ngModel)]="data.connectionString" style="width: 500px">
+    </label>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-button [mat-dialog-close]="data.connectionString" cdkFocusInitial>Ok</button>
+</div>

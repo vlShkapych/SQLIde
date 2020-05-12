@@ -1,5 +1,12 @@
 export interface Script {
-  dbType: string;
-  role: string;
-  script: string;
+  DbType: string;
+  User: User;
+  DbScript: string;
+  ConStr: string;
 }
+export interface User {
+  Id: number;
+  Name: string;
+  AccType: string;
+}
+

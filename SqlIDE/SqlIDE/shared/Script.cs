@@ -2,8 +2,9 @@ namespace SqlIDE.shared
 {
     public class Script
     {
-       public string dbType {get; set; }
-       public string role { get; set; }
-       public string script { get; set; }
+        public string DbType {get; set; }
+        public User User { get; set; }
+        public string DbScript { get; set; }
+        public string ConStr { get; set; }
     }
 }

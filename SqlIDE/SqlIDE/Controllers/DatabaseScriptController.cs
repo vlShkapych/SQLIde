@@ -15,7 +15,9 @@ namespace SqlIDE.Controllers
         [HttpPost("run")]
         public void Run([FromBody]Script scr)
         {
-            Console.WriteLine(scr.script);
+            Console.WriteLine(scr.ConStr);
+            Console.WriteLine(scr.DbScript);
+            Console.WriteLine(scr.DbType);
         }
     }
 }
