@@ -1,8 +1,9 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using SqlIDE.Services;
 using Microsoft.AspNetCore.Mvc;
-
+using Newtonsoft.Json;
 using SqlIDE.shared;
 namespace SqlIDE.Controllers
 {
@@ -14,10 +15,9 @@ namespace SqlIDE.Controllers
 
 
         [HttpPost("run")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public string Run([FromBody]Script scr)
+        public async Task<ActionResult<string>> Run([FromBody]Script scr)
         {
-            string res = "";
+            DbResponse res;
             scr.User = new User()
             {
                 Id = 1,
@@ -26,9 +26,10 @@ namespace SqlIDE.Controllers
             };
            
             var db = new DbService(scr);
-            res = db.RunScript();
-            Console.WriteLine(res);
-            return res;
+            res = await db.RunScriptAsync();
+            
+            string jsonRes = JsonConvert.SerializeObject(res);
+            return Ok(jsonRes);
         }
     }
 }

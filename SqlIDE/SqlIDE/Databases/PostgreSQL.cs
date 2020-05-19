@@ -12,31 +12,30 @@ namespace SqlIDE.Databases
         private string _state;
         private string _response;
         private List<IObserver> _observers;
-
+        private string _message;
         public PostgreSQl(string conStr)
         {
             _connectionString = conStr;
             _observers = new List<IObserver>();
         }
-        public string Run(string script)
+        public DbResponse Run(string script)
         {
             try
             {
-                 var cmd = new NpgsqlCommand(script, _connection);
+                 using var cmd = new NpgsqlCommand(script, _connection);
 
                
-                NpgsqlDataReader res = cmd.ExecuteReader();
+                using NpgsqlDataReader res = cmd.ExecuteReader();
+               
                 while (res.Read())
                 {
-                    _response += "<td>";
+                    _response += "<tr>";
                     for (int i = 0; i < res.FieldCount; i++)
-                        _response += "<tr>"+res[i]+ "</tr>";
-                    _response += "</td>";
+                        _response += "<td>"+res[i]+ "</td>";
+                    _response += "</tr>";
                 }
                 _state = cmd.ExecuteScalar().ToString();
                 NotifyObservers();
-
-
             }
             catch (Exception e)
             {
@@ -45,11 +44,16 @@ namespace SqlIDE.Databases
             }
             finally
             {
+                _message =  _state;   
                 _connection.Close();
                 _state = "Close Connection";
                 NotifyObservers();
             }
-            return _response;
+            return new DbResponse()
+            {
+                Table = _response,
+                Message = _message
+            };
         }
         
         public void Connect()

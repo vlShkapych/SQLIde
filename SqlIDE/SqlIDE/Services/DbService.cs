@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using SqlIDE.shared;
 using SqlIDE.Accounts;
 using SqlIDE.Databases;
+using SqlIDE.reports;
 
 namespace SqlIDE.Services
 {
-    public class DbService: IObserver
+    public class DbService
     {
         private Dictionary<string, IDatabase> _databases;
         private Dictionary<string, Account> _accounts;
@@ -24,7 +26,7 @@ namespace SqlIDE.Services
 
 
             IDatabase db = _databases.GetValueOrDefault(script.DbType);
-            db.AddObserver(this);
+            
 
 
 
@@ -33,24 +35,21 @@ namespace SqlIDE.Services
             _account = _accounts.GetValueOrDefault(script.User.AccType);
         }
 
-        public string RunScript()
+        public async Task<DbResponse> RunScriptAsync()
         {
             if (_account.canRunScript())
             {
                 _account.Connect();
-                return _account.RunScript(_scriptText);
+                var res = _account.RunScript(_scriptText);
+                _account.Accept(new ReportTXT());
             }
 
-            return "";
+            return new DbResponse()
+            {
+                Message = "Access denied",
+                Table = ""
+            };
         }
-
-
-        public void Update(string state)
-        {
-
-            Console.WriteLine(state);
-
-        }
-
+        
     }
 }

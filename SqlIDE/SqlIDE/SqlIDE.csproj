@@ -16,13 +16,19 @@
   <ItemGroup>
     <Content Remove="$(SpaRoot)**" />
     <Content Include="ClientApp\src\app\connectionDialog\connDiag.component.html" />
+    <Content Include="ClientApp\src\app\tableDialog\tabledialog.component.html" />
     <None Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\app\connectionDialog\connDiag.component.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\connectionDialog\dialog-data.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\tableDialog\tabledialog.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\workspace\dbResponse.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\workspace\script.model.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="reportsFiles" />
   </ItemGroup>
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
     <Exec Command="node --version" ContinueOnError="true">

@@ -3,6 +3,6 @@
     public interface IDatabase: IObservable
     {
         public void Connect();
-        public string Run(string script);
+        public DbResponse Run(string script);
     }
 }
