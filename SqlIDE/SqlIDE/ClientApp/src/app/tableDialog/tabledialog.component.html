@@ -1,0 +1,9 @@
+﻿<h2 mat-dialog-title>Response:</h2>
+<mat-dialog-content class="mat-typography">
+  <h4 [innerText]="data.Message"></h4>
+   <div [innerHTML]="data.Table">
+   </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>OK</button>
+</mat-dialog-actions>

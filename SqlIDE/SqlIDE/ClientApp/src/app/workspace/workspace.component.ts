@@ -32,7 +32,7 @@ export class WorkspaceComponent implements OnInit {
       this.showScript();
     });
     this.keyInput.subscribe(key => {
-      if (key === 'Backspace') {
+      if (key === '`') {
         console.log(`${this.script.indexOf('<br>', -1)} === ${this.script.length - 1}`);
         if (this.script.indexOf('<br>', -1) === this.script.length - 4) {
           this.script = this.script.slice(0, -4);
@@ -53,7 +53,7 @@ export class WorkspaceComponent implements OnInit {
 
   @HostListener('document:keyup', ['$event'])
   onKeyUp(ev: KeyboardEvent) {
-    if (/^[A-Za-z0-9*;()'" ]$/.test(ev.key)) {
+    if (/^[A-Za-z0-9*;(),<>'-+!@#$%^&=" ]$/.test(ev.key)) {
       this.textInput.next(ev.key);
     } else {
       this.keyInput.next(ev.key);

@@ -18,6 +18,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatInputModule} from '@angular/material/input';
 import {MatDialogModule} from '@angular/material/dialog';
 import {ConnectionDialogComponent} from './connectionDialog/connDiag.component';
+import {DialogTableComponent} from './tableDialog/tabledialog.component';
 
 @NgModule({
   declarations: [
@@ -25,10 +26,12 @@ import {ConnectionDialogComponent} from './connectionDialog/connDiag.component';
     NavMenuComponent,
     HomeComponent,
     WorkspaceComponent,
-    ConnectionDialogComponent
+    ConnectionDialogComponent,
+    DialogTableComponent
   ],
   entryComponents: [
-    ConnectionDialogComponent
+    ConnectionDialogComponent,
+    DialogTableComponent
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
