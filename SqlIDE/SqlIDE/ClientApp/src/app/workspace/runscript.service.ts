@@ -12,7 +12,7 @@ export class RunScriptService {
   runScript(script: Script) {
     const options = { headers: new HttpHeaders().set('Content-Type', 'application/json') };
     this.http.post<DbResponse>(this.baseUrl + 'databasescript/run', JSON.stringify(script), options).subscribe(result => {
-
+        console.log(result);
         this.openDialog(result);
 
     }, error => console.error(error));

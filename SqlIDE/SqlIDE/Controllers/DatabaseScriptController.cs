@@ -12,23 +12,34 @@ namespace SqlIDE.Controllers
     [Route("[controller]")]
     public class DatabaseScriptController : Controller
     {
+        [HttpPost("checkConnection")]
+        public string CheckConnection([FromBody]Script scr)
+        {
+            var dbRes = new DbResponse();
 
+            
+            var db =  DbService.GetDbService();
+            
 
+            db.OpenSession(scr);
+            dbRes =  db.CheckConnection();
+            db.CloseSession();
+            string jsonRes = JsonConvert.SerializeObject(dbRes);
+            return jsonRes;
+        }
+        
         [HttpPost("run")]
         public async Task<ActionResult<string>> Run([FromBody]Script scr)
         {
             DbResponse res;
-            scr.User = new User()
-            {
-                Id = 1,
-                AccType = "moderator",
-                Name = "Vlad"
-            };
+         //   Console.WriteLine(scr.User.AccType);
            
-            var db = new DbService(scr);
-            res = await db.RunScriptAsync();
-            
+            var db =  DbService.GetDbService();
+            db.OpenSession(scr);
+            res = await db.RunScriptAsync(scr.DbScript);
+            db.CloseSession();
             string jsonRes = JsonConvert.SerializeObject(res);
+            
             return Ok(jsonRes);
         }
     }

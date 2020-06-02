@@ -3,6 +3,6 @@
     public class DbResponse
     {
         public string Message;
-        public string Table;
+        public string Table = "";
     }
 }

@@ -1,38 +1,69 @@
 ﻿using System;
 using System.Data;
 
+
 namespace SqlIDE.shared
 {
-    abstract public class Account: IObserver 
+    abstract public class Account
     {
-        public readonly User user;
-        public readonly IDatabase db;
-        public readonly string Action;
+        public  User user;
+        public  IDatabase db;
+        public  string Action;
+        public string Result;
 
+        public IDbCommand commands;
+        public void SetCommand(IDbCommand com)
+        {
+            commands = com;
+        }
         public Account (IDatabase db, User user)
         {
             this.db = db;
             this.user = user;
-            db.AddObserver(this);
+            SetCommand(new DbCommands(db));
         }
 
-        public virtual void Connect()
+        public virtual DbResponse Connect()
         {
-            db.Connect();
+            try
+            {
+                commands.Connect();
+                return new DbResponse(){ Message = "Connection Success!", Table = ""};
+            }
+            catch (Exception e)
+            {
+                return new DbResponse(){ Message = e.Message, Table = ""};
+            }
+            
         }
+        public virtual DbResponse Disconnect()
+        {
+            try
+            {
+                commands.Disconnect();
+                return new DbResponse(){ Message = "Connection Closed!", Table = ""};
+            }
+            catch (Exception e)
+            {
+                return new DbResponse(){ Message = e.Message, Table = ""};
+            }
+            
+        }
+        
         public virtual DbResponse RunScript(string script)
         {
-            return db.Run(script);
+            Connect();
+            var scr = commands.Run(script);
+            Action = script;
+            Result = scr.Message;
+ 
+            return scr;
         }
-        public void Update(string state)
-        {
-            
-                Console.WriteLine(state);
-        }
+
 
         public abstract void Accept(IVisitor visitor);
 
-        public abstract bool canRunScript();
+        public abstract bool canRunScript(string script);
         
     }
 }

@@ -17,9 +17,9 @@ export class WorkspaceComponent implements OnInit {
   @ViewChildren('script-card') card: ElementRef;
   textInput: Subject<string> = new Subject<string>();
   keyInput: Subject<string> = new Subject<string>();
-  serverStatus = 'Disconnected';
+  isConnected = true;
   selected = 'None';
-  connStr = 'Host=localhost;Username=postgres;Password=1192989;Database=postgres';
+  connStr = 'Server=localhost\\SQLEXPRESS;Database=master;Trusted_Connection=True;';
   script = '';
   input = '';
 
@@ -53,12 +53,11 @@ export class WorkspaceComponent implements OnInit {
 
   @HostListener('document:keyup', ['$event'])
   onKeyUp(ev: KeyboardEvent) {
-    if (/^[A-Za-z0-9*;(),<>'-+!@#$%^&=" ]$/.test(ev.key)) {
+    if (/^[A-Za-z0-9*;(),<>'-+.!@#$%^&=" ]$/.test(ev.key)) {
       this.textInput.next(ev.key);
     } else {
       this.keyInput.next(ev.key);
     }
-    console.log(ev.key);
   }
 
 
@@ -81,22 +80,30 @@ export class WorkspaceComponent implements OnInit {
       DbType: this.selected,
       DbScript: this.input,
       ConStr: this.connStr,
-      User: null
+      User: {
+        Id: 1,
+        Name: 'Vlad',
+        AccType: 'moderator'
+    }
     };
+    console.log(script.DbScript)
     this.runScriptService.runScript(script);
   }
 
 
   openDialog(): void {
+
     const dialogRef = this.dialog.open(ConnectionDialogComponent, {
       width: '600px',
-      data: {connectionString: this.connStr}
+      data: {connectionString: this.connStr }
     });
-
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      this.connStr = result;
+      console.log(result);
+      this.connStr = result.connectionString;
+      this.isConnected = result.isConnected;
     });
+    this.isConnected = true;
   }
+
 }
 

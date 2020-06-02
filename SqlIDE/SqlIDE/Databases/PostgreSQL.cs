@@ -5,7 +5,7 @@ using SqlIDE.shared;
 
 namespace SqlIDE.Databases
 {
- public class PostgreSQl: IDatabase, IObservable
+ public class PostgreSQl: IDatabase
     {
         private string _connectionString;
         private NpgsqlConnection _connection;
@@ -19,14 +19,15 @@ namespace SqlIDE.Databases
             _observers = new List<IObserver>();
         }
         public DbResponse Run(string script)
-        {
+        {            
+            
             try
             {
                  using var cmd = new NpgsqlCommand(script, _connection);
 
                
                 using NpgsqlDataReader res = cmd.ExecuteReader();
-               
+                _response = "";
                 while (res.Read())
                 {
                     _response += "<tr>";
@@ -36,6 +37,7 @@ namespace SqlIDE.Databases
                 }
                 _state = cmd.ExecuteScalar().ToString();
                 NotifyObservers();
+                
             }
             catch (Exception e)
             {
@@ -52,7 +54,7 @@ namespace SqlIDE.Databases
             return new DbResponse()
             {
                 Table = _response,
-                Message = _message
+                Message = _response ==null?_message = _message: "Success"
             };
         }
         
@@ -72,6 +74,22 @@ namespace SqlIDE.Databases
             {
                 NotifyObservers();
 
+            }
+        }
+        public void Disconnect()
+        {
+            try
+            {
+                _connection.Close();
+                _state = "Connection is Closed";
+            }
+            catch (Exception e)
+            {
+                _state = e.Message;
+            }
+            finally
+            {
+                NotifyObservers();
             }
         }
         //IObservable
